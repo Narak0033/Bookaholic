@@ -1,0 +1,38 @@
+# Node
+node_modules/
+npm-debug.log*
+.npm
+dist/
+
+# Environment — never commit these
+.env
+.env.local
+.env.production
+.env.*.local
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V*
+.Trashes
+
+# Terraform
+infrastructure/terraform/.terraform/
+infrastructure/terraform/*.tfstate
+infrastructure/terraform/*.tfstate.backup
+infrastructure/terraform/*.tfvars
+!infrastructure/terraform/*.tfvars.example
+
+# Logs
+logs/
+*.log
+
+# Docker
+*.tar
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
