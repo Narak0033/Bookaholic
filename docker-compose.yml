@@ -1,0 +1,143 @@
+version: '3.8'
+
+services:
+
+  mongo:
+    image: mongo:7
+    container_name: bookaholic-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - bookaholic-network
+
+  auth-service:
+    build: ./services/auth-service
+    container_name: auth-service
+    restart: unless-stopped
+    environment:
+      - PORT=5001
+      - MONGO_URI=mongodb://mongo:27017/bookaholic_auth
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=7d
+    depends_on:
+      - mongo
+    networks:
+      - bookaholic-network
+
+  books-service:
+    build: ./services/books-service
+    container_name: books-service
+    restart: unless-stopped
+    environment:
+      - PORT=5002
+      - MONGO_URI=mongodb://mongo:27017/bookaholic_books
+      - JWT_SECRET=${JWT_SECRET}
+      - GOOGLE_BOOKS_API_KEY=${GOOGLE_BOOKS_API_KEY}
+    depends_on:
+      - mongo
+    networks:
+      - bookaholic-network
+
+  tracking-service:
+    build: ./services/tracking-service
+    container_name: tracking-service
+    restart: unless-stopped
+    environment:
+      - PORT=5003
+      - MONGO_URI=mongodb://mongo:27017/bookaholic_tracking
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - mongo
+    networks:
+      - bookaholic-network
+
+  reviews-service:
+    build: ./services/reviews-service
+    container_name: reviews-service
+    restart: unless-stopped
+    environment:
+      - PORT=5004
+      - MONGO_URI=mongodb://mongo:27017/bookaholic_reviews
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - mongo
+    networks:
+      - bookaholic-network
+
+  social-service:
+    build: ./services/social-service
+    container_name: social-service
+    restart: unless-stopped
+    environment:
+      - PORT=5005
+      - MONGO_URI=mongodb://mongo:27017/bookaholic_social
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - mongo
+    networks:
+      - bookaholic-network
+
+  recommend-service:
+    build: ./services/recommend-service
+    container_name: recommend-service
+    restart: unless-stopped
+    environment:
+      - PORT=5006
+      - MONGO_URI=mongodb://mongo:27017/bookaholic_recommend
+      - JWT_SECRET=${JWT_SECRET}
+      - TRACKING_SERVICE_URL=http://tracking-service:5003
+      - BOOKS_SERVICE_URL=http://books-service:5002
+    depends_on:
+      - mongo
+      - tracking-service
+      - books-service
+    networks:
+      - bookaholic-network
+
+  notify-service:
+    build: ./services/notify-service
+    container_name: notify-service
+    restart: unless-stopped
+    environment:
+      - PORT=5007
+      - MONGO_URI=mongodb://mongo:27017/bookaholic_notify
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - mongo
+    networks:
+      - bookaholic-network
+
+  api-gateway:
+    build: ./services/api-gateway
+    container_name: api-gateway
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - JWT_SECRET=${JWT_SECRET}
+      - AUTH_SERVICE_URL=http://auth-service:5001
+      - BOOKS_SERVICE_URL=http://books-service:5002
+      - TRACKING_SERVICE_URL=http://tracking-service:5003
+      - REVIEWS_SERVICE_URL=http://reviews-service:5004
+      - SOCIAL_SERVICE_URL=http://social-service:5005
+      - RECOMMEND_SERVICE_URL=http://recommend-service:5006
+      - NOTIFY_SERVICE_URL=http://notify-service:5007
+    depends_on:
+      - auth-service
+      - books-service
+      - tracking-service
+      - reviews-service
+      - social-service
+      - recommend-service
+      - notify-service
+    networks:
+      - bookaholic-network
+
+networks:
+  bookaholic-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
