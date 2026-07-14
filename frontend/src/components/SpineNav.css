@@ -1,0 +1,23 @@
+.spine-nav {
+  display: flex;
+  gap: 3px;
+  padding: 14px 16px 0;
+}
+
+.spine {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 10px 12px;
+  border-radius: 4px 4px 0 0;
+  writing-mode: vertical-rl;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  opacity: 0.75;
+}
+
+.spine:hover { opacity: 1; transform: translateY(-2px); }
+.spine-active { opacity: 1; transform: translateY(-4px); }
+
+.spine-rose { background: var(--rose); color: #3A1218; }
+.spine-gold { background: var(--gold); color: #3A2A0C; }
+.spine-wine { background: var(--wine); color: var(--text); }
+.spine-dark { background: var(--bg-card); color: var(--text-dim); }
