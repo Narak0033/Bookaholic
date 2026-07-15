@@ -1,0 +1,120 @@
+.shelf-page { max-width: 720px; }
+
+.shelf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+}
+
+.shelf-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+
+.shelf-header h1 { font-size: 32px; }
+
+.shelf-add-btn {
+  background: var(--gold);
+  color: #3A2A0C;
+  border: none;
+  padding: 10px 18px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.shelf-search {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.shelf-search-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.shelf-search-form input {
+  flex: 1;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+}
+
+.shelf-search-form input:focus { border-color: var(--gold); }
+
+.shelf-search-form button {
+  padding: 10px 18px;
+  background: var(--wine);
+  color: var(--text);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.shelf-results {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.book-add-btn {
+  background: none;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 7px 14px;
+  border-radius: var(--radius);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.book-add-btn:hover { background: var(--gold); color: #3A2A0C; }
+
+.shelf-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.shelf-status-select {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 12px;
+  padding: 7px 10px;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+}
+
+.shelf-empty {
+  color: var(--text-faint);
+  font-size: 14px;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.manual-toggle {
+  background: none;
+  border: none;
+  color: var(--gold);
+  font-size: 12px;
+  margin-top: 14px;
+  padding: 0;
+}
+
+.manual-toggle:hover { text-decoration: underline; }

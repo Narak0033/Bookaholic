@@ -4,6 +4,7 @@ import MainLayout from './layouts/MainLayout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Shelf from './pages/Shelf';
 import './styles/tokens.css';
 
 function ProtectedRoute({ children }) {
@@ -22,7 +23,7 @@ function AppRoutes() {
           path="/shelf"
           element={
             <ProtectedRoute>
-              <div>Shelf page — coming next</div>
+              <Shelf />
             </ProtectedRoute>
           }
         />

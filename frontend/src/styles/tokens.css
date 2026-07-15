@@ -50,10 +50,34 @@ button { font-family: var(--font-body); cursor: pointer; }
   display: flex;
   flex-direction: column;
 }
+
+.app-header {
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-raised);
+}
+
+.app-header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.app-logo {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
 .app-main {
   flex: 1;
-  max-width: var(--max-width);
+  max-width: 900px;
   margin: 0 auto;
-  padding: 24px 20px 60px;
+  padding: 40px 24px 60px;
   width: 100%;
 }

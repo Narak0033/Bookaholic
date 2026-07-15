@@ -1,0 +1,24 @@
+.status-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.status-tab {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.2s;
+}
+
+.status-tab:hover { border-color: var(--border-strong); color: var(--text); }
+
+.status-tab-active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #3A2A0C;
+  font-weight: 500;
+}

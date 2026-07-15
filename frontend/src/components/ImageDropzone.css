@@ -1,0 +1,45 @@
+.dropzone-wrap { margin-bottom: 4px; }
+
+.dropzone {
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--radius);
+  padding: 24px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.dropzone:hover { border-color: var(--gold); background: rgba(201, 161, 90, 0.04); }
+.dropzone-active { border-color: var(--gold); background: rgba(201, 161, 90, 0.08); }
+
+.dropzone-text { font-size: 13px; color: var(--text-dim); margin-bottom: 4px; }
+.dropzone-hint { font-size: 11px; color: var(--text-faint); }
+
+.dropzone-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px;
+}
+
+.dropzone-preview img {
+  width: 48px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.dropzone-remove {
+  margin-left: auto;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--rose);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: var(--radius);
+}
+
+.dropzone-error { font-size: 12px; color: var(--rose); margin-top: 6px; }
