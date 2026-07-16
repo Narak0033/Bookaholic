@@ -118,3 +118,19 @@
 }
 
 .manual-toggle:hover { text-decoration: underline; }
+
+.shelf-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shelf-remove-btn {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 12px;
+  padding: 4px 6px;
+}
+
+.shelf-remove-btn:hover { color: var(--rose); text-decoration: underline; }

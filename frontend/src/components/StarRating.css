@@ -1,0 +1,3 @@
+.star-rating { display: inline-flex; gap: 2px; }
+.star { color: var(--border-strong); line-height: 1; }
+.star-filled { color: var(--gold); }

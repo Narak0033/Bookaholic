@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { searchBooks } from '../api/books';
-import { getShelf, addToShelf, updateShelfEntry } from '../api/tracking';
 import BookCard from '../components/BookCard';
 import StatusTabs from '../components/StatusTabs';
 import ManualBookForm from '../components/ManualBookForm';
 import './Shelf.css';
+import { getShelf, addToShelf, updateShelfEntry, removeFromShelf } from '../api/tracking';
 
 export default function Shelf() {
   const [activeStatus, setActiveStatus] = useState('reading');
@@ -76,6 +76,17 @@ export default function Shelf() {
       loadShelf();
     } catch (err) {
       console.error('Failed to update status', err);
+    }
+  };
+
+  const handleRemove = async (bookId, title) => {
+  const confirmed = window.confirm(`Remove "${title}" from your shelf?`);
+    if (!confirmed) return;
+    try {
+      await removeFromShelf(bookId);
+      loadShelf();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Could not remove this book');
     }
   };
 
@@ -169,16 +180,26 @@ export default function Shelf() {
             <BookCard
               key={entry._id}
               book={entry.bookSnapshot}
+              bookId={entry.bookId}
               action={
-                <select
-                  className="shelf-status-select"
-                  value={entry.status}
-                  onChange={(e) => handleStatusChange(entry.bookId, e.target.value)}
-                >
-                  <option value="want_to_read">want to read</option>
-                  <option value="reading">reading</option>
-                  <option value="finished">finished</option>
-                </select>
+                <div className="shelf-card-actions">
+                  <select
+                    className="shelf-status-select"
+                    value={entry.status}
+                    onChange={(e) => handleStatusChange(entry.bookId, e.target.value)}
+                  >
+                    <option value="want_to_read">want to read</option>
+                    <option value="reading">reading</option>
+                    <option value="finished">finished</option>
+                  </select>
+                  <button
+                    className="shelf-remove-btn"
+                    onClick={() => handleRemove(entry.bookId, entry.bookSnapshot.title)}
+                    aria-label={`Remove ${entry.bookSnapshot.title} from shelf`}
+                  >
+                    remove
+                  </button>
+                </div>
               }
             />
           ))}

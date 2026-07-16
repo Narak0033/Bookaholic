@@ -6,6 +6,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Shelf from './pages/Shelf';
 import './styles/tokens.css';
+import Discover from './pages/Discover';
+import BookDetail from './pages/BookDetail';
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth();
@@ -24,6 +26,22 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <Shelf />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/discover"
+          element={
+            <ProtectedRoute>
+              <Discover />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/book/:bookId"
+          element={
+            <ProtectedRoute>
+              <BookDetail />
             </ProtectedRoute>
           }
         />
