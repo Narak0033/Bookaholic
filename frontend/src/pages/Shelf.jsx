@@ -80,7 +80,7 @@ export default function Shelf() {
   };
 
   const handleRemove = async (bookId, title) => {
-  const confirmed = window.confirm(`Remove "${title}" from your shelf?`);
+    const confirmed = window.confirm(`Remove "${title}" from your shelf?`);
     if (!confirmed) return;
     try {
       await removeFromShelf(bookId);
@@ -177,31 +177,40 @@ export default function Shelf() {
       ) : (
         <div className="shelf-list">
           {shelf.map((entry) => (
-            <BookCard
-              key={entry._id}
-              book={entry.bookSnapshot}
-              bookId={entry.bookId}
-              action={
-                <div className="shelf-card-actions">
-                  <select
-                    className="shelf-status-select"
-                    value={entry.status}
-                    onChange={(e) => handleStatusChange(entry.bookId, e.target.value)}
-                  >
-                    <option value="want_to_read">want to read</option>
-                    <option value="reading">reading</option>
-                    <option value="finished">finished</option>
-                  </select>
-                  <button
-                    className="shelf-remove-btn"
-                    onClick={() => handleRemove(entry.bookId, entry.bookSnapshot.title)}
-                    aria-label={`Remove ${entry.bookSnapshot.title} from shelf`}
-                  >
-                    remove
-                  </button>
-                </div>
-              }
-            />
+            <div key={entry._id} className="shelf-entry">
+              <BookCard
+                book={entry.bookSnapshot}
+                bookId={entry.bookId}
+                action={
+                  <div className="shelf-card-actions">
+                    <select
+                      className="shelf-status-select"
+                      value={entry.status}
+                      onChange={(e) => handleStatusChange(entry.bookId, e.target.value)}
+                    >
+                      <option value="want_to_read">want to read</option>
+                      <option value="reading">reading</option>
+                      <option value="finished">finished</option>
+                    </select>
+                    <button
+                      className="shelf-remove-btn"
+                      onClick={() => handleRemove(entry.bookId, entry.bookSnapshot.title)}
+                      aria-label={`Remove ${entry.bookSnapshot.title} from shelf`}
+                    >
+                      remove
+                    </button>
+                  </div>
+                }
+              />
+              <p className="shelf-entry-date">
+                {entry.status === 'finished' && entry.endDate &&
+                  `finished ${new Date(entry.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`}
+                {entry.status === 'reading' && entry.startDate &&
+                  `started ${new Date(entry.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`}
+                {entry.status === 'want_to_read' &&
+                  `added ${new Date(entry.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`}
+              </p>
+            </div>
           ))}
         </div>
       )}

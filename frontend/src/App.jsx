@@ -8,6 +8,8 @@ import Shelf from './pages/Shelf';
 import './styles/tokens.css';
 import Discover from './pages/Discover';
 import BookDetail from './pages/BookDetail';
+import Clubs from './pages/Clubs';
+import ClubDetail from './pages/ClubDetail';
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth();
@@ -42,6 +44,22 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <BookDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/clubs"
+          element={
+            <ProtectedRoute>
+              <Clubs />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/clubs/:clubId"
+          element={
+            <ProtectedRoute>
+              <ClubDetail />
             </ProtectedRoute>
           }
         />

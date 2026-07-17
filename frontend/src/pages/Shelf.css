@@ -134,3 +134,10 @@
 }
 
 .shelf-remove-btn:hover { color: var(--rose); text-decoration: underline; }
+
+.shelf-entry-date {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 4px;
+  padding-left: 4px;
+}

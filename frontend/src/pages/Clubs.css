@@ -1,0 +1,8 @@
+.clubs-page { max-width: 720px; }
+.clubs-page h1 { font-size: 32px; }
+
+.clubs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
