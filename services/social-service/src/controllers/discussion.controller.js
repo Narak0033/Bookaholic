@@ -46,7 +46,7 @@ exports.getDiscussions = async (req, res) => {
 exports.addMessage = async (req, res) => {
   try {
     const { discussionId } = req.params;
-    const { content } = req.body;
+    const { content, parentMessageId } = req.body;
 
     if (!content) {
       return res.status(400).json({ message: 'Content is required' });
@@ -57,10 +57,18 @@ exports.addMessage = async (req, res) => {
       return res.status(404).json({ message: 'Discussion not found' });
     }
 
+    if (parentMessageId) {
+      const parent = await Message.findById(parentMessageId);
+      if (!parent || parent.discussionId !== discussionId) {
+        return res.status(400).json({ message: 'Invalid parent message' });
+      }
+    }
+
     const message = await Message.create({
       discussionId,
       userId: req.userId,
       content,
+      parentMessageId: parentMessageId || null,
     });
 
     discussion.messageCount += 1;
@@ -97,6 +105,56 @@ exports.likeMessage = async (req, res) => {
 
     await message.save();
     res.json({ liked: !alreadyLiked, totalLikes: message.likes.length });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+exports.updateMessage = async (req, res) => {
+  try {
+    const { content } = req.body;
+
+    if (!content) {
+      return res.status(400).json({ message: 'Content is required' });
+    }
+
+    const message = await Message.findOneAndUpdate(
+      { _id: req.params.messageId, userId: req.userId },
+      { content },
+      { new: true }
+    );
+
+    if (!message) {
+      return res.status(404).json({ message: 'Message not found' });
+    }
+
+    res.json({ message });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+exports.deleteMessage = async (req, res) => {
+  try {
+    const message = await Message.findOneAndDelete({
+      _id: req.params.messageId,
+      userId: req.userId,
+    });
+
+    if (!message) {
+      return res.status(404).json({ message: 'Message not found' });
+    }
+
+    // Also delete any replies pointing to this message so nothing orphans
+    await Message.deleteMany({ parentMessageId: req.params.messageId });
+
+    const discussion = await Discussion.findById(message.discussionId);
+    if (discussion) {
+      discussion.messageCount = Math.max(0, discussion.messageCount - 1);
+      await discussion.save();
+    }
+
+    res.json({ message: 'Message deleted' });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }

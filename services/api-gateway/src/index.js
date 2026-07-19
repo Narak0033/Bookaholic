@@ -29,7 +29,7 @@ app.use(loggerMiddleware);
 // Rate limiting — 100 requests per 15 minutes per IP
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 2000,
   message: { message: 'Too many requests, please try again later' }
 });
 app.use(limiter);

@@ -30,3 +30,13 @@ export const addComment = async (reviewId, content) => {
   const { data } = await client.post(`/reviews/${reviewId}/comments`, { content });
   return data;
 };
+
+export const updateComment = async (reviewId, commentId, content) => {
+  const { data } = await client.put(`/reviews/${reviewId}/comments/${commentId}`, { content });
+  return data;
+};
+
+export const deleteComment = async (reviewId, commentId) => {
+  const { data } = await client.delete(`/reviews/${reviewId}/comments/${commentId}`);
+  return data;
+};

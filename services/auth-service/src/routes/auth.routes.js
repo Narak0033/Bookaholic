@@ -8,5 +8,6 @@ router.post('/login', authController.login);
 router.get('/profile', authMiddleware, authController.getProfile);
 router.put('/profile', authMiddleware, authController.updateProfile);
 router.get('/verify', authMiddleware, authController.verifyToken);
+router.post('/users/batch', authMiddleware, authController.getUsersByIds);
 
 module.exports = router;

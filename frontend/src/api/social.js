@@ -49,8 +49,11 @@ export const getMessages = async (discussionId) => {
   return data;
 };
 
-export const sendMessage = async (discussionId, content) => {
-  const { data } = await client.post(`/social/discussions/${discussionId}/messages`, { content });
+export const sendMessage = async (discussionId, content, parentMessageId = null) => {
+  const { data } = await client.post(`/social/discussions/${discussionId}/messages`, {
+    content,
+    parentMessageId,
+  });
   return data;
 };
 
@@ -61,5 +64,35 @@ export const followUser = async (userId) => {
 
 export const getFeed = async () => {
   const { data } = await client.get('/social/feed');
+  return data;
+};
+
+export const unfollowUser = async (userId) => {
+  const { data } = await client.delete(`/social/unfollow/${userId}`);
+  return data;
+};
+
+export const checkFollowing = async (userId) => {
+  const { data } = await client.get(`/social/follow/check/${userId}`);
+  return data;
+};
+
+export const getFollowers = async (userId) => {
+  const { data } = await client.get(`/social/followers/${userId}`);
+  return data;
+};
+
+export const getFollowing = async (userId) => {
+  const { data } = await client.get(`/social/following/${userId}`);
+  return data;
+};
+
+export const updateMessage = async (messageId, content) => {
+  const { data } = await client.put(`/social/messages/${messageId}`, { content });
+  return data;
+};
+
+export const deleteMessage = async (messageId) => {
+  const { data } = await client.delete(`/social/messages/${messageId}`);
   return data;
 };

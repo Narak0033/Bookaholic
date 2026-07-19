@@ -1,15 +1,19 @@
 import { useState } from 'react';
 import StarRating from './StarRating';
-import { likeReview, getComments, addComment } from '../api/reviews';
+import { likeReview, getComments, addComment, updateComment, deleteComment } from '../api/reviews';
+import { useAuth } from '../context/AuthContext';
 import './ReviewCard.css';
 
 export default function ReviewCard({ review }) {
+  const { user } = useAuth();
   const [revealed, setRevealed] = useState(!review.containsSpoilers);
   const [likes, setLikes] = useState(review.likes?.length || 0);
   const [liked, setLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState(null);
   const [commentText, setCommentText] = useState('');
+  const [editingId, setEditingId] = useState(null);
+  const [editText, setEditText] = useState('');
 
   const handleLike = async () => {
     try {
@@ -35,6 +39,30 @@ export default function ReviewCard({ review }) {
     const { comment } = await addComment(review._id, commentText.trim());
     setComments((prev) => [...(prev || []), comment]);
     setCommentText('');
+  };
+
+  const startEdit = (comment) => {
+    setEditingId(comment._id);
+    setEditText(comment.content);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditText('');
+  };
+
+  const saveEdit = async (commentId) => {
+    if (!editText.trim()) return;
+    const { comment } = await updateComment(review._id, commentId, editText.trim());
+    setComments((prev) => prev.map((c) => (c._id === commentId ? comment : c)));
+    cancelEdit();
+  };
+
+  const handleDelete = async (commentId) => {
+    const confirmed = window.confirm('Delete this comment?');
+    if (!confirmed) return;
+    await deleteComment(review._id, commentId);
+    setComments((prev) => prev.filter((c) => c._id !== commentId));
   };
 
   return (
@@ -65,7 +93,29 @@ export default function ReviewCard({ review }) {
       {showComments && (
         <div className="review-comments">
           {comments?.map((c) => (
-            <p key={c._id} className="review-comment">{c.content}</p>
+            <div key={c._id} className="review-comment-row">
+              {editingId === c._id ? (
+                <div className="review-comment-edit">
+                  <input
+                    value={editText}
+                    onChange={(e) => setEditText(e.target.value)}
+                    autoFocus
+                  />
+                  <button onClick={() => saveEdit(c._id)}>save</button>
+                  <button onClick={cancelEdit} className="review-comment-cancel">cancel</button>
+                </div>
+              ) : (
+                <>
+                  <p className="review-comment">{c.content}</p>
+                  {c.userId === user?._id && (
+                    <div className="review-comment-actions">
+                      <button onClick={() => startEdit(c)}>edit</button>
+                      <button onClick={() => handleDelete(c._id)}>delete</button>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
           ))}
           <form onSubmit={handleAddComment} className="review-comment-form">
             <input

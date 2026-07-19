@@ -1,0 +1,13 @@
+.follow-btn {
+  background: none;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+
+.follow-btn:hover { background: var(--gold); color: #3A2A0C; }
+.follow-btn-active { background: var(--gold); color: #3A2A0C; }
+.follow-btn-small { font-size: 10px; padding: 3px 8px; }

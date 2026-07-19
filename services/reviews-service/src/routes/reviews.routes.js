@@ -16,5 +16,6 @@ router.delete('/:id', auth, reviewsController.deleteReview);
 router.post('/:id/like', auth, reviewsController.likeReview);
 router.post('/:reviewId/comments', auth, commentsController.addComment);
 router.delete('/:reviewId/comments/:commentId', auth, commentsController.deleteComment);
+router.put('/:reviewId/comments/:commentId', auth, commentsController.updateComment);
 
 module.exports = router;

@@ -92,3 +92,19 @@ exports.verifyToken = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
+
+// Batch lookup — used by other services/frontend to resolve userIds to usernames
+exports.getUsersByIds = async (req, res) => {
+  try {
+    const { userIds } = req.body;
+
+    if (!Array.isArray(userIds) || userIds.length === 0) {
+      return res.status(400).json({ message: 'userIds array is required' });
+    }
+
+    const users = await User.find({ _id: { $in: userIds } }).select('username avatar');
+    res.json({ users });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};

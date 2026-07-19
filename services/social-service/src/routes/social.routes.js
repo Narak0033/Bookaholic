@@ -32,5 +32,7 @@ router.post('/messages/:messageId/like', auth, discussionController.likeMessage)
 router.get('/feed', auth, activityController.getFeed);
 router.post('/activity', activityController.createActivity);
 router.get('/activity/:userId', activityController.getUserActivity);
+router.put('/messages/:messageId', auth, discussionController.updateMessage);
+router.delete('/messages/:messageId', auth, discussionController.deleteMessage);
 
 module.exports = router;
