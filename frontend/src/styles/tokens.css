@@ -81,3 +81,9 @@ button { font-family: var(--font-body); cursor: pointer; }
   padding: 40px 24px 60px;
   width: 100%;
 }
+
+.app-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}

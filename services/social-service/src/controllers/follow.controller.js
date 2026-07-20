@@ -1,4 +1,6 @@
 const Follow = require('../models/follow.model');
+const axios = require('axios');
+const NOTIFY_URL = process.env.NOTIFY_SERVICE_URL || 'http://localhost:5007';
 
 exports.follow = async (req, res) => {
   try {
@@ -18,6 +20,14 @@ exports.follow = async (req, res) => {
     }
 
     await Follow.create({ followerId: req.userId, followingId: targetId });
+
+    // Fire and forget — don't block the response if notify is slow
+    axios.post(`${NOTIFY_URL}/notify`, {
+      userId: targetId,
+      type: 'new_follower',
+      data: { followerId: req.userId }
+    }).catch((err) => console.error('Failed to send follow notification', err.message));
+
     res.status(201).json({ message: 'Now following user' });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });

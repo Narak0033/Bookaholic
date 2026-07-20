@@ -26,6 +26,30 @@ exports.addComment = async (req, res) => {
   }
 };
 
+exports.updateComment = async (req, res) => {
+  try {
+    const { content } = req.body;
+
+    if (!content) {
+      return res.status(400).json({ message: 'Content is required' });
+    }
+
+    const comment = await Comment.findOneAndUpdate(
+      { _id: req.params.commentId, userId: req.userId },
+      { content },
+      { new: true }
+    );
+
+    if (!comment) {
+      return res.status(404).json({ message: 'Comment not found' });
+    }
+
+    res.json({ comment });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
 exports.getComments = async (req, res) => {
   try {
     const comments = await Comment.find({ reviewId: req.params.reviewId })

@@ -1,6 +1,7 @@
 import { Outlet, Link } from 'react-router-dom';
 import SpineNav from '../components/SpineNav';
 import ProfileMenu from '../components/ProfileMenu';
+import NotificationBell from '../components/NotificationBell';
 
 export default function MainLayout() {
   return (
@@ -9,7 +10,10 @@ export default function MainLayout() {
         <div className="app-header-inner">
           <Link to="/" className="app-logo">Bookaholic</Link>
           <SpineNav />
-          <ProfileMenu />
+          <div className="app-header-right">
+            <NotificationBell />
+            <ProfileMenu />
+          </div>
         </div>
       </header>
       <main className="app-main">
