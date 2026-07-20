@@ -30,7 +30,7 @@ exports.addToShelf = async (req, res) => {
 
 exports.updateShelfEntry = async (req, res) => {
   try {
-    const { status, currentPage } = req.body;
+    const { status, currentPage, startDate, endDate } = req.body;
 
     const entry = await Shelf.findOne({
       userId: req.userId,
@@ -42,11 +42,11 @@ exports.updateShelfEntry = async (req, res) => {
     }
 
     if (status) {
-      // Auto-set dates based on status change
-      if (status === 'reading' && entry.status === 'want_to_read') {
+      // Auto-set dates based on status change — only if not manually provided
+      if (status === 'reading' && entry.status === 'want_to_read' && !startDate) {
         entry.startDate = new Date();
       }
-      if (status === 'finished') {
+      if (status === 'finished' && !endDate) {
         entry.endDate = new Date();
         if (!entry.startDate) entry.startDate = new Date();
       }
@@ -55,6 +55,14 @@ exports.updateShelfEntry = async (req, res) => {
 
     if (currentPage !== undefined) {
       entry.currentPage = currentPage;
+    }
+
+    // Manual date overrides — for backfilling books read before joining
+    if (startDate) {
+      entry.startDate = new Date(startDate);
+    }
+    if (endDate) {
+      entry.endDate = new Date(endDate);
     }
 
     await entry.save();

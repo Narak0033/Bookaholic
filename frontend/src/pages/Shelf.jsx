@@ -5,6 +5,7 @@ import StatusTabs from '../components/StatusTabs';
 import ManualBookForm from '../components/ManualBookForm';
 import './Shelf.css';
 import { getShelf, addToShelf, updateShelfEntry, removeFromShelf } from '../api/tracking';
+import EditDatesModal from '../components/EditDatesModal';
 
 export default function Shelf() {
   const [activeStatus, setActiveStatus] = useState('reading');
@@ -16,6 +17,7 @@ export default function Shelf() {
   const [results, setResults] = useState([]);
   const [searching, setSearching] = useState(false);
   const [showManualForm, setShowManualForm] = useState(false);
+  const [editingDatesFor, setEditingDatesFor] = useState(null);
 
   const loadShelf = useCallback(async () => {
     setLoading(true);
@@ -112,6 +114,11 @@ export default function Shelf() {
     }
   };
 
+  const handleDatesSaved = (updatedEntry) => {
+    setShelf((prev) => prev.map((e) => (e._id === updatedEntry._id ? updatedEntry : e)));
+    setEditingDatesFor(null);
+  };
+
   return (
     <div className="shelf-page">
       <div className="shelf-header">
@@ -202,17 +209,31 @@ export default function Shelf() {
                   </div>
                 }
               />
-              <p className="shelf-entry-date">
-                {entry.status === 'finished' && entry.endDate &&
-                  `finished ${new Date(entry.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`}
-                {entry.status === 'reading' && entry.startDate &&
-                  `started ${new Date(entry.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`}
-                {entry.status === 'want_to_read' &&
-                  `added ${new Date(entry.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`}
-              </p>
+              <div className="shelf-entry-date-row">
+                <p className="shelf-entry-date">
+                  {entry.status === 'finished' && entry.endDate &&
+                    `finished ${new Date(entry.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`}
+                  {entry.status === 'reading' && entry.startDate &&
+                    `started ${new Date(entry.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`}
+                  {entry.status === 'want_to_read' &&
+                    `added ${new Date(entry.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`}
+                </p>
+                {(entry.status === 'reading' || entry.status === 'finished') && (
+                  <button className="shelf-edit-dates-btn" onClick={() => setEditingDatesFor(entry)}>
+                    edit dates
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
+      )}
+      {editingDatesFor && (
+        <EditDatesModal
+          entry={editingDatesFor}
+          onClose={() => setEditingDatesFor(null)}
+          onSaved={handleDatesSaved}
+        />
       )}
     </div>
   );

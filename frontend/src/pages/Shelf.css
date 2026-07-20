@@ -141,3 +141,23 @@
   margin-top: 4px;
   padding-left: 4px;
 }
+
+.shelf-entry-date-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  padding-left: 4px;
+}
+
+.shelf-entry-date-row .shelf-entry-date { margin-top: 0; }
+
+.shelf-edit-dates-btn {
+  background: none;
+  border: none;
+  color: var(--gold);
+  font-size: 11px;
+  padding: 0;
+}
+
+.shelf-edit-dates-btn:hover { text-decoration: underline; }

@@ -25,3 +25,8 @@ export const removeFromShelf = async (bookId) => {
   const { data } = await client.delete(`/tracking/shelf/${bookId}`);
   return data;
 };
+
+export const getWrapped = async (year) => {
+  const { data } = await client.get(`/tracking/wrapped/${year}`);
+  return data;
+};

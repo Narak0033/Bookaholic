@@ -10,6 +10,7 @@ import Discover from './pages/Discover';
 import BookDetail from './pages/BookDetail';
 import Clubs from './pages/Clubs';
 import ClubDetail from './pages/ClubDetail';
+import Wrapped from './pages/Wrapped';
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth();
@@ -60,6 +61,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <ClubDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/wrapped"
+          element={
+            <ProtectedRoute>
+              <Wrapped />
             </ProtectedRoute>
           }
         />
