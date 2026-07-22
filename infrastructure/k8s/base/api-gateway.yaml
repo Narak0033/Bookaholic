@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: bookaholic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: bookaholic-api-gateway:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 4000
+          env:
+            - name: PORT
+              value: "4000"
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: bookaholic-secrets
+                  key: JWT_SECRET
+            - name: AUTH_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bookaholic-config
+                  key: AUTH_SERVICE_URL
+            - name: BOOKS_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bookaholic-config
+                  key: BOOKS_SERVICE_URL
+            - name: TRACKING_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bookaholic-config
+                  key: TRACKING_SERVICE_URL
+            - name: REVIEWS_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bookaholic-config
+                  key: REVIEWS_SERVICE_URL
+            - name: SOCIAL_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bookaholic-config
+                  key: SOCIAL_SERVICE_URL
+            - name: RECOMMEND_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bookaholic-config
+                  key: RECOMMEND_SERVICE_URL
+            - name: NOTIFY_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bookaholic-config
+                  key: NOTIFY_SERVICE_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+  namespace: bookaholic
+spec:
+  type: NodePort
+  selector:
+    app: api-gateway
+  ports:
+    - port: 4000
+      targetPort: 4000
+      nodePort: 30080

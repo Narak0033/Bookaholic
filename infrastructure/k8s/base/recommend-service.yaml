@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recommend-service
+  namespace: bookaholic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recommend-service
+  template:
+    metadata:
+      labels:
+        app: recommend-service
+    spec:
+      containers:
+        - name: recommend-service
+          image: bookaholic-recommend-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5006
+          env:
+            - name: PORT
+              value: "5006"
+            - name: MONGO_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: bookaholic-config
+                  key: MONGO_URI_RECOMMEND
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: bookaholic-secrets
+                  key: JWT_SECRET
+            - name: TRACKING_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bookaholic-config
+                  key: TRACKING_SERVICE_URL
+            - name: BOOKS_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bookaholic-config
+                  key: BOOKS_SERVICE_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: recommend-service
+  namespace: bookaholic
+spec:
+  selector:
+    app: recommend-service
+  ports:
+    - port: 5006
+      targetPort: 5006

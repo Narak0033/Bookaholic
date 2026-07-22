@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reviews-service
+  namespace: bookaholic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reviews-service
+  template:
+    metadata:
+      labels:
+        app: reviews-service
+    spec:
+      containers:
+        - name: reviews-service
+          image: bookaholic-reviews-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5004
+          env:
+            - name: PORT
+              value: "5004"
+            - name: MONGO_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: bookaholic-config
+                  key: MONGO_URI_REVIEWS
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: bookaholic-secrets
+                  key: JWT_SECRET
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reviews-service
+  namespace: bookaholic
+spec:
+  selector:
+    app: reviews-service
+  ports:
+    - port: 5004
+      targetPort: 5004

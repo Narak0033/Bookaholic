@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: social-service
+  namespace: bookaholic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: social-service
+  template:
+    metadata:
+      labels:
+        app: social-service
+    spec:
+      containers:
+        - name: social-service
+          image: bookaholic-social-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5005
+          env:
+            - name: PORT
+              value: "5005"
+            - name: MONGO_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: bookaholic-config
+                  key: MONGO_URI_SOCIAL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: bookaholic-secrets
+                  key: JWT_SECRET
+            - name: NOTIFY_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bookaholic-config
+                  key: NOTIFY_SERVICE_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: social-service
+  namespace: bookaholic
+spec:
+  selector:
+    app: social-service
+  ports:
+    - port: 5005
+      targetPort: 5005

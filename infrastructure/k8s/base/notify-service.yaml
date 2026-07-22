@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notify-service
+  namespace: bookaholic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notify-service
+  template:
+    metadata:
+      labels:
+        app: notify-service
+    spec:
+      containers:
+        - name: notify-service
+          image: bookaholic-notify-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5007
+          env:
+            - name: PORT
+              value: "5007"
+            - name: MONGO_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: bookaholic-config
+                  key: MONGO_URI_NOTIFY
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: bookaholic-secrets
+                  key: JWT_SECRET
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notify-service
+  namespace: bookaholic
+spec:
+  selector:
+    app: notify-service
+  ports:
+    - port: 5007
+      targetPort: 5007
